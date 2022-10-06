@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const fs = require('fs');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -11,23 +12,71 @@ const vscode = require('vscode');
 function activate(context) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "helloworld-minimal-sample" is now active!');
+	// console.log('Congratulations, your extension "helloworld-minimal-sample" is now active!');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
+	let disposable = vscode.commands.registerCommand('extension.hieCmd1', () => {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World! from VS');
 	});
 
+	let disposable2 = vscode.commands.registerCommand('extension.hieCmd2', () => {
+		vscode.window.showInformationMessage('We are testing second command');
+		console.log(vscode.env.appName);
+		console.log(vscode.env.sessionId);
+		var nDate = new Date();
+		console.log(nDate.toUTCString());
+		let fileCount = [];
+		let directoryCount = [];
+		let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(vscode.workspace.rootPath));
+		// let totalCount = 0;
+		directoryData.then(function (value) {
+			totalCount = value.length;
+			for (let i = 0; i < value.length; i++) {
+				let directoryEntry = value[i];
+				console.log(directoryEntry[0]);
+				if (directoryEntry[1] == 1) {
+					fileCount.push(directoryEntry[0])
+				}
+				if (directoryEntry[1] == 2) {
+					directoryCount.push(vscode.workspace.rootPath + '/' + directoryEntry[0]);
+				}
+			}
+
+			directoryCount.forEach(function (item) {
+				let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(item));
+				directoryData.then(function (value) {
+					for (let i = 0; i < value.length; i++) {
+						let directoryEntry = value[i];
+						console.log(directoryEntry[0]);
+						if (directoryEntry[1] == 1) {
+							fileCount.push(directoryEntry[0])
+						}
+						if (directoryEntry[1] == 2) {
+							directoryCount.push(item + '/' + directoryEntry[0]);
+						}
+					}
+				});
+			});
+			console.log(fileCount);
+			console.log(directoryCount);
+			// console.log(vscode.workspace.rootPath);
+			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
+			vscode.window.showInformationMessage(message);
+		});
+	});
+
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable2);
 }
 
+
 // this method is called when your extension is deactivated
-function deactivate() {}
+function deactivate() { }
 
 // eslint-disable-next-line no-undef
 module.exports = {

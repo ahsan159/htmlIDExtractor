@@ -8,15 +8,20 @@
 		"vscode": "^1.32.0"
 	},
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:extension.hieCmd1",
+		"onCommand:extension.hieCmd2"
 	],
 	"main": "./extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
-			}
+				"command": "extension.hieCmd1",
+				"title": "Test1"
+			},
+			{
+				"command": "extension.hieCmd2",
+				"title": "Test2"
+			}			
 		]
 	},
 	"scripts": {},
