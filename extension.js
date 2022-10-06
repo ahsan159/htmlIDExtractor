@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 const fs = require('fs');
+// const async = require('async');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -32,6 +33,8 @@ function activate(context) {
 		console.log(nDate.toUTCString());
 		let fileCount = [];
 		let directoryCount = [];
+		directoryCount.push(vscode.workspace.rootPath);
+		/*
 		let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(vscode.workspace.rootPath));
 		// let totalCount = 0;
 		directoryData.then(function (value) {
@@ -46,34 +49,73 @@ function activate(context) {
 					directoryCount.push(vscode.workspace.rootPath + '/' + directoryEntry[0]);
 				}
 			}
+		*/
+		console.log('Total Directories: ' + directoryCount.length);
 
-			directoryCount.forEach(function (item) {
+		let item = directoryCount[0];
+		let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(item));
+		directoryData.then(function (value) {
+			for (let i = 0; i < value.length; i++) {
+				let directoryEntry = value[i];
+				//console.log(directoryEntry[0]);
+				if (directoryEntry[1] == 1) {
+					fileCount.push(item + '/' + directoryEntry[0])
+				}
+				if (directoryEntry[1] == 2) {
+					directoryCount.push(item + '/' + directoryEntry[0]);
+				}
+				// console.log(directoryCount.length);
+			}
+		}).then(function () {
+			// console.log(fileCouremnt.length);
+			// console.log(directoryCount.length);
+			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
+			console.log(message);
+			// vscode.window.showInformationMessage(message);
+			for (let dIndex = 0; dIndex < directoryCount.length; dIndex++) {
+				let item = directoryCount[dIndex];
 				let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(item));
 				directoryData.then(function (value) {
 					for (let i = 0; i < value.length; i++) {
 						let directoryEntry = value[i];
-						console.log(directoryEntry[0]);
 						if (directoryEntry[1] == 1) {
-							fileCount.push(directoryEntry[0])
+							fileCount.push(item + '/' + directoryEntry[0])
 						}
 						if (directoryEntry[1] == 2) {
 							directoryCount.push(item + '/' + directoryEntry[0]);
 						}
+						//console.log(directoryEntry[0]);
+						// console.log(directoryCount.length);
 					}
 				});
-			});
-			console.log(fileCount);
-			console.log(directoryCount);
-			// console.log(vscode.workspace.rootPath);
-			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
-			vscode.window.showInformationMessage(message);
+			}
 		});
+		await(function () {
+			// console.log(fileCount);
+			// console.log(directoryCount);
+			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
+			console.log(message);
+			// vscode.window.showInformationMessage(message);
+		});
+		await(function () {
+			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
+			console.log(message);
+			fileCount.forEach(function (item) {
+				if (item.endsWith('.html')) {
+					console.log("HTMLFILE", item);
+				}
+			});
+		});
+
 	});
 
 	context.subscriptions.push(disposable);
 	context.subscriptions.push(disposable2);
 }
 
+function scanDirectory(directoryAddress) {
+
+}
 
 // this method is called when your extension is deactivated
 function deactivate() { }
