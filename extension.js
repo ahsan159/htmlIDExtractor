@@ -5,6 +5,7 @@ const fs = require('fs');
 // const async = require('async');
 
 let fileCount = [];
+let htmlCount = [];
 let directoryCount = [];
 let directoryIndex = 0;
 
@@ -34,18 +35,23 @@ function activate(context) {
 		console.log(vscode.env.sessionId);
 		var nDate = new Date();
 		console.log(nDate.toUTCString());
-		directoryCount.push(vscode.workspace.rootPath);
+		addItem(directoryCount, vscode.workspace.rootPath);
 		let directryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(directoryCount[directoryIndex]));
 		directryData.then(function (value) {
+			// this first loop will scan the top level directory
 			for (var i = 0; i < value.length; i++) {
 				let data = value[i];
 				console.log(data[0], data[1]);
 				if (data[1] == 1) {
-					fileCount.push(directoryCount[directoryIndex] + '/' +  data[0]);
+					addItem(fileCount, directoryCount[directoryIndex] + '/' + data[0]);
 				}
 				else if (data[1] == 2) {
-					directoryCount.push(directoryCount[directoryIndex] + '/' + data[0]);
+					addItem(directoryCount, directoryCount[directoryIndex] + '/' + data[0]);
 				}
+			}
+			let subDir2 = [];
+			for (var i = directoryIndex + 1; i < directoryCount.length; i++) {
+				subDir2[i] = vscode.workspace.fs.readDirectory(vscode.Uri.file(directoryCount[i]));
 			}
 		});
 	});
@@ -53,10 +59,10 @@ function activate(context) {
 	let disposable3 = vscode.commands.registerCommand('extension.hieCmd3', () => {
 		let message = 'File(s): ' + fileCount.length + ' Folder(s): ' + directoryCount.length;
 		console.log('Printing Files and Folders');
-		fileCount.forEach(function(item) {
+		fileCount.forEach(function (item) {
 			console.log(item);
 		});
-		directoryCount.forEach(function(item) {
+		directoryCount.forEach(function (item) {
 			console.log(item);
 		});
 		vscode.window.showInformationMessage(message);
@@ -69,6 +75,13 @@ function activate(context) {
 
 function scanDirectory(directoryAddress) {
 
+}
+
+function addItem(array, item) {
+	if (array.indexOf(item) == -1) {
+		array.push(item);
+	}
+	return array;
 }
 
 // this method is called when your extension is deactivated
