@@ -4,6 +4,10 @@ const vscode = require('vscode');
 const fs = require('fs');
 // const async = require('async');
 
+let fileCount = [];
+let directoryCount = [];
+let directoryIndex = 0;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -18,9 +22,8 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.hieCmd1', () => {
+	let disposable1 = vscode.commands.registerCommand('extension.hieCmd1', () => {
 		// The code you place here will be executed every time your command is executed
-
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World! from VS');
 	});
@@ -31,86 +34,37 @@ function activate(context) {
 		console.log(vscode.env.sessionId);
 		var nDate = new Date();
 		console.log(nDate.toUTCString());
-		let fileCount = [];
-		let directoryCount = [];
 		directoryCount.push(vscode.workspace.rootPath);
-		/*
-		let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(vscode.workspace.rootPath));
-		// let totalCount = 0;
-		directoryData.then(function (value) {
-			totalCount = value.length;
-			for (let i = 0; i < value.length; i++) {
-				let directoryEntry = value[i];
-				console.log(directoryEntry[0]);
-				if (directoryEntry[1] == 1) {
-					fileCount.push(directoryEntry[0])
+		let directryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(directoryCount[directoryIndex]));
+		directryData.then(function (value) {
+			for (var i = 0; i < value.length; i++) {
+				let data = value[i];
+				console.log(data[0], data[1]);
+				if (data[1] == 1) {
+					fileCount.push(directoryCount[directoryIndex] + '/' +  data[0]);
 				}
-				if (directoryEntry[1] == 2) {
-					directoryCount.push(vscode.workspace.rootPath + '/' + directoryEntry[0]);
+				else if (data[1] == 2) {
+					directoryCount.push(directoryCount[directoryIndex] + '/' + data[0]);
 				}
 			}
-		*/
-		console.log('Total Directories: ' + directoryCount.length);
-
-		let item = directoryCount[0];
-		let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(item));
-		directoryData.then(function (value) {
-			for (let i = 0; i < value.length; i++) {
-				let directoryEntry = value[i];
-				//console.log(directoryEntry[0]);
-				if (directoryEntry[1] == 1) {
-					fileCount.push(item + '/' + directoryEntry[0])
-				}
-				if (directoryEntry[1] == 2) {
-					directoryCount.push(item + '/' + directoryEntry[0]);
-				}
-				// console.log(directoryCount.length);
-			}
-		}).then(function () {
-			// console.log(fileCouremnt.length);
-			// console.log(directoryCount.length);
-			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
-			console.log(message);
-			// vscode.window.showInformationMessage(message);
-			for (let dIndex = 0; dIndex < directoryCount.length; dIndex++) {
-				let item = directoryCount[dIndex];
-				let directoryData = vscode.workspace.fs.readDirectory(vscode.Uri.file(item));
-				directoryData.then(function (value) {
-					for (let i = 0; i < value.length; i++) {
-						let directoryEntry = value[i];
-						if (directoryEntry[1] == 1) {
-							fileCount.push(item + '/' + directoryEntry[0])
-						}
-						if (directoryEntry[1] == 2) {
-							directoryCount.push(item + '/' + directoryEntry[0]);
-						}
-						//console.log(directoryEntry[0]);
-						// console.log(directoryCount.length);
-					}
-				});
-			}
 		});
-		await(function () {
-			// console.log(fileCount);
-			// console.log(directoryCount);
-			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
-			console.log(message);
-			// vscode.window.showInformationMessage(message);
-		});
-		await(function () {
-			let message = 'Files: ' + fileCount.length + ', Folders: ' + directoryCount.length;
-			console.log(message);
-			fileCount.forEach(function (item) {
-				if (item.endsWith('.html')) {
-					console.log("HTMLFILE", item);
-				}
-			});
-		});
-
 	});
 
-	context.subscriptions.push(disposable);
+	let disposable3 = vscode.commands.registerCommand('extension.hieCmd3', () => {
+		let message = 'File(s): ' + fileCount.length + ' Folder(s): ' + directoryCount.length;
+		console.log('Printing Files and Folders');
+		fileCount.forEach(function(item) {
+			console.log(item);
+		});
+		directoryCount.forEach(function(item) {
+			console.log(item);
+		});
+		vscode.window.showInformationMessage(message);
+	});
+
+	context.subscriptions.push(disposable1);
 	context.subscriptions.push(disposable2);
+	context.subscriptions.push(disposable3);
 }
 
 function scanDirectory(directoryAddress) {

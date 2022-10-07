@@ -1,6 +1,6 @@
 {
-	"name": "helloworld-minimal-sample",
-	"description": "Minimal HelloWorld example for VS Code",
+	"name": "hide html id extractor",
+	"description": "Scan All the ID's in HTML file",
 	"version": "0.0.1",
 	"publisher": "vscode-samples",
 	"repository": "https://github.com/Microsoft/vscode-extension-samples/helloworld-minimal-sample",
@@ -20,8 +20,12 @@
 			},
 			{
 				"command": "extension.hieCmd2",
-				"title": "Test2"
-			}			
+				"title": "Scan Directory"
+			},
+			{
+				"command": "extension.hieCmd3",
+				"title": "Check Count"
+			}
 		]
 	},
 	"scripts": {},
