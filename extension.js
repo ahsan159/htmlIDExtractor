@@ -60,7 +60,7 @@ function activate(context) {
 					//console.log(directoryCount[i], value[i]);
 					let rDir = directoryCount[i];
 					let subDirs = value[i];
-					console.log(subDirs,i);
+					console.log(subDirs, i);
 					subDirs.forEach(function (data) {
 						try {
 							if (data[1] == 1) {
@@ -94,9 +94,18 @@ function activate(context) {
 		vscode.window.showInformationMessage(message);
 	});
 
+	let disposable4 = vscode.commands.registerCommand('extension.insert1', () => {
+		const editor = vscode.window.activeTextEditor;
+		const doc = editor.document;
+		editor.edit((editBuilder) => {
+			editBuilder.insert("my string");
+		});
+	});
+
 	context.subscriptions.push(disposable1);
 	context.subscriptions.push(disposable2);
 	context.subscriptions.push(disposable3);
+	context.subscriptions.push(disposable4);
 }
 
 function scanDirectory(directoryAddress) {

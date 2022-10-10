@@ -26,6 +26,10 @@
 			{
 				"command": "extension.hieCmd3",
 				"title": "Check Count"
+			},
+			{
+				"command": "extension.insert1",
+				"title": "Insert String"
 			}
 		]
 	},
