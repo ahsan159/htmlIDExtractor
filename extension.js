@@ -50,9 +50,35 @@ function activate(context) {
 				}
 			}
 			let subDir2 = [];
+			subDir2[directoryIndex] = directryData;
 			for (var i = directoryIndex + 1; i < directoryCount.length; i++) {
 				subDir2[i] = vscode.workspace.fs.readDirectory(vscode.Uri.file(directoryCount[i]));
-			}
+			}			//console.log(subDir2);
+			var directoryCountLevel1 = directoryCount.length;
+			Promise.all(subDir2).then(function (value) {
+				for (var i = 1; i < directoryCountLevel1; i++) {
+					//console.log(directoryCount[i], value[i]);
+					let rDir = directoryCount[i];
+					let subDirs = value[i];
+					console.log(subDirs,i);
+					subDirs.forEach(function (data) {
+						try {
+							if (data[1] == 1) {
+								addItem(fileCount, rDir + '/' + data[0]);
+							}
+							else if (data[1] == 2) {
+								addItem(directoryCount, rDir + '/' + data[0]);
+							}
+						}
+						catch (exp) {
+							console.log(exp, i);
+						}
+					});
+				}
+				console.log(subDir2);
+				console.log('Promise concludion in loop');
+			});
+			console.log('Promise conclusion');
 		});
 	});
 
