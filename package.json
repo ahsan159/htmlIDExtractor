@@ -1,15 +1,16 @@
 {
-	"name": "hide html id extractor",
-	"description": "Scan All the ID's in HTML file",
+	"name": "html-id-extractor",
+	"description": "Scan All the ID's in HTML file and made them available in javascript file",
 	"version": "0.0.1",
 	"publisher": "vscode-samples",
-	"repository": "https://github.com/Microsoft/vscode-extension-samples/helloworld-minimal-sample",
+	"repository": "https://github.com/ahsan159/htmlIDExtractor",
 	"engines": {
 		"vscode": "^1.32.0"
 	},
 	"activationEvents": [
 		"onCommand:extension.hieCmd1",
-		"onCommand:extension.hieCmd2"
+		"onCommand:extension.hieCmd2",
+		"onCommand:extension.hieCmd3"
 	],
 	"main": "./extension.js",
 	"contributes": {
