@@ -95,7 +95,21 @@ function activate(context) {
 	});
 
 	let disposable4 = vscode.commands.registerCommand('extension.insert1', () => {
-		vscode.window.showInformationMessage("Should Insert String");		
+		vscode.window.showInformationMessage("Should Insert String");
+		const editor = vscode.window.activeTextEditor;
+
+		if (editor) {
+			const document = editor.document;
+			editor.edit(editBuilder => {
+				editor.selections.forEach(sel => {
+					const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
+					let word = document.getText(range);
+					//let reversed = word.split('').reverse().join('');
+					editBuilder.replace(range,"My String");
+					console.log(range);
+				});
+			});
+		}
 	});
 
 	context.subscriptions.push(disposable1);
