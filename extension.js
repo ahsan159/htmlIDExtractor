@@ -95,11 +95,7 @@ function activate(context) {
 	});
 
 	let disposable4 = vscode.commands.registerCommand('extension.insert1', () => {
-		const editor = vscode.window.activeTextEditor;
-		const doc = editor.document;
-		editor.edit((editBuilder) => {
-			editBuilder.insert("my string");
-		});
+		vscode.window.showInformationMessage("Should Insert String");		
 	});
 
 	context.subscriptions.push(disposable1);

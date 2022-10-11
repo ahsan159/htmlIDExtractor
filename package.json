@@ -10,7 +10,8 @@
 	"activationEvents": [
 		"onCommand:extension.hieCmd1",
 		"onCommand:extension.hieCmd2",
-		"onCommand:extension.hieCmd3"
+		"onCommand:extension.hieCmd3",
+		"onCommand:extension.insert1"
 	],
 	"main": "./extension.js",
 	"contributes": {
